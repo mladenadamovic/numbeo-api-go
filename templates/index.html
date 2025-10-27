@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numbeo City Prices</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            margin: 20px 30px;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .results {
+            padding: 30px;
+        }
+
+        .results-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .results-header h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .meta-item {
+            display: flex;
+            gap: 5px;
+        }
+
+        .meta-label {
+            font-weight: 600;
+        }
+
+        .categories {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .category {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .category-header {
+            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .price-table thead {
+            background: #667eea;
+            color: white;
+        }
+
+        .price-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .price-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .price-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .price-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .price {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .data-points {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .no-data svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        footer {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            form {
+                flex-direction: column;
+            }
+
+            .form-group {
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .price-table {
+                font-size: 0.9rem;
+            }
+
+            .price-table th,
+            .price-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Numbeo City Prices</h1>
+            <p class="subtitle">Compare cost of living across cities worldwide</p>
+        </header>
+
+        <div class="form-section">
+            <form method="GET" action="/">
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" value="{{.City}}" placeholder="e.g., San Francisco, CA" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <input type="text" id="country" name="country" value="{{.Country}}" placeholder="e.g., United States" required>
+                </div>
+
+                <input type="hidden" name="fetch" value="true">
+                <button type="submit">Get Prices</button>
+            </form>
+        </div>
+
+        {{if .Error}}
+        <div class="error">
+            <strong>Error:</strong> {{.Error}}
+        </div>
+        {{end}}
+
+        {{if .Response}}
+        <div class="results">
+            <div class="results-header">
+                <h2>{{.Response.CityName}}{{if .Response.Country}}, {{.Response.Country}}{{end}}</h2>
+                <div class="meta-info">
+                    <div class="meta-item">
+                        <span class="meta-label">Currency:</span>
+                        <span>{{.Response.Currency}}</span>
+                    </div>
+                    {{if .Response.MonthYear}}
+                    <div class="meta-item">
+                        <span class="meta-label">Data from:</span>
+                        <span>{{.Response.MonthYear}}</span>
+                    </div>
+                    {{end}}
+                    <div class="meta-item">
+                        <span class="meta-label">Total Items:</span>
+                        <span>{{len .Response.Prices}}</span>
+                    </div>
+                </div>
+            </div>
+
+            {{if .Response.Prices}}
+            <div class="categories">
+                {{$currentCategory := ""}}
+                {{range .Response.Prices}}
+                    {{if ne .CategoryName $currentCategory}}
+                        {{if ne $currentCategory ""}}
+                            </tbody></table></div>
+                        {{end}}
+                        {{$currentCategory = .CategoryName}}
+                        <div class="category">
+                            <div class="category-header">{{.CategoryName}}</div>
+                            <table class="price-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Average Price</th>
+                                        <th>Price Range</th>
+                                        <th>Data Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    {{end}}
+                    <tr>
+                        <td>{{.ItemName}}</td>
+                        <td class="price">{{printf "%.2f" .AveragePrice}} {{$.Response.Currency}}</td>
+                        <td>{{printf "%.2f" .LowestPrice}} - {{printf "%.2f" .HighestPrice}}</td>
+                        <td class="data-points">{{.DataPoints}}</td>
+                    </tr>
+                {{end}}
+                {{if ne $currentCategory ""}}
+                    </tbody></table></div>
+                {{end}}
+            </div>
+            {{else}}
+            <div class="no-data">
+                <p>No price data available for this city.</p>
+            </div>
+            {{end}}
+        </div>
+        {{else if not .Error}}
+        <div class="no-data">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3>Enter a city and country to get started</h3>
+            <p>Search for cost of living data from cities around the world</p>
+        </div>
+        {{end}}
+
+        <footer>
+            <p>Data provided by <a href="https://www.numbeo.com" target="_blank" style="color: #667eea; text-decoration: none;">Numbeo.com</a></p>
+        </footer>
+    </div>
+</body>
+</html>
