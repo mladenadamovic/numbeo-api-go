@@ -27,12 +27,44 @@ func NewPricesHandler(apiClient *api.Client) (*PricesHandler, error) {
 	}, nil
 }
 
+// Category represents a group of prices by category
+type Category struct {
+	Name   string
+	Prices []api.PriceItem
+}
+
 // PageData represents the data passed to the template
 type PageData struct {
-	City     string
-	Country  string
-	Response *api.CityPricesResponse
-	Error    string
+	City       string
+	Country    string
+	Response   *api.CityPricesResponse
+	Categories []Category
+	Error      string
+}
+
+// groupByCategory groups price items by their category name
+func groupByCategory(prices []api.PriceItem) []Category {
+	categoryMap := make(map[string][]api.PriceItem)
+	var categoryOrder []string
+
+	// Group prices and maintain order
+	for _, price := range prices {
+		if _, exists := categoryMap[price.CategoryName]; !exists {
+			categoryOrder = append(categoryOrder, price.CategoryName)
+		}
+		categoryMap[price.CategoryName] = append(categoryMap[price.CategoryName], price)
+	}
+
+	// Build result maintaining category order
+	var categories []Category
+	for _, categoryName := range categoryOrder {
+		categories = append(categories, Category{
+			Name:   categoryName,
+			Prices: categoryMap[categoryName],
+		})
+	}
+
+	return categories
 }
 
 // ServeHTTP handles HTTP requests
@@ -58,6 +90,8 @@ func (h *PricesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			data.Error = err.Error()
 		} else {
 			data.Response = resp
+			// Group prices by category
+			data.Categories = groupByCategory(resp.Prices)
 		}
 	}
 

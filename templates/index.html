@@ -308,37 +308,32 @@
                 </div>
             </div>
 
-            {{if .Response.Prices}}
+            {{if .Categories}}
             <div class="categories">
-                {{$currentCategory := ""}}
-                {{range .Response.Prices}}
-                    {{if ne .CategoryName $currentCategory}}
-                        {{if ne $currentCategory ""}}
-                            </tbody></table></div>
-                        {{end}}
-                        {{$currentCategory = .CategoryName}}
-                        <div class="category">
-                            <div class="category-header">{{.CategoryName}}</div>
-                            <table class="price-table">
-                                <thead>
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>Average Price</th>
-                                        <th>Price Range</th>
-                                        <th>Data Points</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    {{end}}
-                    <tr>
-                        <td>{{.ItemName}}</td>
-                        <td class="price">{{printf "%.2f" .AveragePrice}} {{$.Response.Currency}}</td>
-                        <td>{{printf "%.2f" .LowestPrice}} - {{printf "%.2f" .HighestPrice}}</td>
-                        <td class="data-points">{{.DataPoints}}</td>
-                    </tr>
-                {{end}}
-                {{if ne $currentCategory ""}}
-                    </tbody></table></div>
+                {{range .Categories}}
+                <div class="category">
+                    <div class="category-header">{{.Name}}</div>
+                    <table class="price-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Average Price</th>
+                                <th>Price Range</th>
+                                <th>Data Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .Prices}}
+                            <tr>
+                                <td>{{.ItemName}}</td>
+                                <td class="price">{{printf "%.2f" .AveragePrice}} {{$.Response.Currency}}</td>
+                                <td>{{printf "%.2f" .LowestPrice}} - {{printf "%.2f" .HighestPrice}}</td>
+                                <td class="data-points">{{.DataPoints}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
                 {{end}}
             </div>
             {{else}}
